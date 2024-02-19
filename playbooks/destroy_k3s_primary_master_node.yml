@@ -1,0 +1,21 @@
+# playbooks/create_k3s_scripts/destroy_k3s_primary_master_node.yml
+
+- name: 5. Destroy Primary Master Node
+  hosts: primary_master_node
+  become: true
+
+  vars:
+    ansible_ssh_private_key_file: /home/ansible/.ssh/id_rsa
+    
+  tasks:
+    - name: 5.1 Execute K3s Node Destruction
+      template:
+        src: ../templates/destroy_k3s_node.j2
+        dest: /opt/k3s/destroy_k3s_master_node.sh
+      vars:
+        node_type: "MASTER_NODE"
+
+    - name: 5.2 Change file permissions to 775
+      file:
+        path: /opt/k3s/destroy_k3s_master_node.sh
+        mode: "775"
